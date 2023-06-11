@@ -9,6 +9,10 @@ function makeItineraryForTests() {
   return new Itinerary([southampton, liverpool, belfast]);
 }
 
+function makeShipForTests() {
+  return new Ship(makeItineraryForTests());
+}
+
 describe("Ship", () => {
   it("creates an object", () => {
     const itinerary = makeItineraryForTests();
@@ -21,42 +25,37 @@ describe("Ship", () => {
     expect(ship.itinerary).toBe(itinerary);
   });
 
-  it("has a current port which is the first port of itinerary", () => {
+  it("has a current port which is the first port of the itinerary on instantiation", () => {
     const itinerary = makeItineraryForTests();
     const ship = new Ship(itinerary);
     expect(ship.currentPort).toEqual(itinerary.ports[0]);
   });
 
-  it("has a previous port which is initially set to null", () => {
+  it("has a previous port set to null on instaniation", () => {
     const itinerary = makeItineraryForTests();
     const ship = new Ship(itinerary);
     expect(ship.previousPort).toBeNull();
   });
-});
 
-function makeShipForTests() {
-  return new Ship(makeItineraryForTests());
-}
+  it("gets added to port on instantiation", () => {
+    const itinerary = makeItineraryForTests();
+    const ship = new Ship(itinerary);
+    expect(ship.currentPort.ships).toEqual([ship]);
+  });
 
-describe("setSail", () => {
-  it("makes the truthiness of currentPort be false", () => {
+  it("can set sail", () => {
     const ship = makeShipForTests();
     ship.setSail();
     expect(ship.currentPort).toBeFalsy();
-  });
-
-  it("sets the previousPort to be the starting port the first time", () => {
-    const ship = makeShipForTests();
-    ship.setSail();
     expect(ship.previousPort).toBe(ship.itinerary.ports[0]);
+    expect(ship.previousPort.ships).toEqual([]);
   });
-});
 
-describe("dock", () => {
-  it("sets the currentPort to the next port in the itinerary", () => {
+  it("can dock at a different port", () => {
     const ship = makeShipForTests();
     ship.setSail();
     ship.dock();
     expect(ship.currentPort).toEqual(ship.itinerary.ports[1]);
+    expect(ship.currentPort.ships).toEqual([ship]);
   });
 });
