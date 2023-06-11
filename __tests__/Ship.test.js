@@ -1,15 +1,20 @@
 const Ship = require("../src/Ship.js");
-const Port = require("../src/Port.js");
 const Itinerary = require("../src/Itinerary.js");
 
 describe("Ship", () => {
   let itinerary;
 
   beforeEach(() => {
-    const southampton = new Port("Southampton");
-    const liverpool = new Port("Liverpool");
-    const belfast = new Port("Belfast");
-    itinerary = new Itinerary([southampton, liverpool, belfast]);
+    itinerary = new Itinerary([
+      {
+        addShip: jest.fn(),
+        removeShip: jest.fn(),
+      },
+      {
+        addShip: jest.fn(),
+        removeShip: jest.fn(),
+      },
+    ]);
   });
 
   describe("constructor", () => {
@@ -34,7 +39,7 @@ describe("Ship", () => {
 
     it("gets added to port on instantiation", () => {
       const ship = new Ship(itinerary);
-      expect(ship.currentPort.ships).toEqual([ship]);
+      expect(ship.currentPort.addShip).toHaveBeenCalledWith(ship);
     });
   });
 
@@ -49,14 +54,14 @@ describe("Ship", () => {
       ship.setSail();
       expect(ship.currentPort).toBeFalsy();
       expect(ship.previousPort).toBe(ship.itinerary.ports[0]);
-      expect(ship.previousPort.ships).toEqual([]);
+      expect(ship.previousPort.removeShip).toHaveBeenCalledWith(ship);
     });
 
     it("can dock at a different port", () => {
       ship.setSail();
       ship.dock();
       expect(ship.currentPort).toEqual(ship.itinerary.ports[1]);
-      expect(ship.currentPort.ships).toEqual([ship]);
+      expect(ship.currentPort.addShip).toHaveBeenCalledWith(ship);
     });
   });
 });
