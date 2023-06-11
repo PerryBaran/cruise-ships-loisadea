@@ -2,14 +2,6 @@ const Port = require("../src/Port.js");
 const Ship = require("../src/Ship.js");
 const Itinerary = require("../src/Itinerary.js");
 
-function makeShipForTests() {
-  const southampton = new Port("Southampton");
-  const liverpool = new Port("Liverpool");
-  const belfast = new Port("Belfast");
-  const itinerary = new Itinerary([southampton, liverpool, belfast]);
-  return new Ship(itinerary);
-}
-
 describe("Port", () => {
   it("creates an object", () => {
     expect(new Port("Southampton")).toBeInstanceOf(Port);
@@ -25,18 +17,30 @@ describe("Port", () => {
     expect(port.ships).toEqual([]);
   });
 
-  it("can have ships added to it", () => {
-    const port = new Port("Southampton");
-    const ship = makeShipForTests();
-    port.addShip(ship);
-    expect(port.ships).toEqual([ship]);
-  });
+  describe("methods", () => {
+    let port;
+    let ship;
 
-  it("can have ships removed from it", () => {
-    const port = new Port("Southampton");
-    const ship = makeShipForTests();
-    port.addShip(ship);
-    port.removeShip(ship);
-    expect(port.ships).toEqual([]);
+    beforeEach(() => {
+      port = new Port("Southampton");
+
+      // make ship
+      const southampton = new Port("Southampton");
+      const liverpool = new Port("Liverpool");
+      const belfast = new Port("Belfast");
+      const itinerary = new Itinerary([southampton, liverpool, belfast]);
+      ship = new Ship(itinerary);
+    });
+
+    it("can have ships added to it", () => {
+      port.addShip(ship);
+      expect(port.ships).toEqual([ship]);
+    });
+
+    it("can have ships removed from it", () => {
+      port.addShip(ship);
+      port.removeShip(ship);
+      expect(port.ships).toEqual([]);
+    });
   });
 });
