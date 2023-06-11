@@ -1,13 +1,9 @@
 const Itinerary = require("../src/Itinerary.js");
-const Port = require("../src/Port.js");
 
 describe("Itinerary", () => {
   let ports;
   beforeEach(() => {
-    const southampton = new Port("Southampton");
-    const liverpool = new Port("Liverpool");
-    const belfast = new Port("Belfast");
-    ports = [southampton, liverpool, belfast];
+    ports = [jest.fn(), jest.fn(), jest.fn()];
   });
 
   describe("constructor", () => {
